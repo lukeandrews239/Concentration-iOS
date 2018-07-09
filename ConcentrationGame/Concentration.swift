@@ -10,13 +10,35 @@ import Foundation
 
 class Concentration
 {
-    var cards = [Card]()
+    // MARK: - Public Properties
 
+    private (set) var cards = [Card]()
     var score = 0
-
     var flipCount = 0
 
-    var indexOfSingleCard: Int?
+    // MARK: - Private Properties
+
+    private var indexOfSingleCard: Int?
+    private let themes: [Int:[String]] = [
+        0:["👌","🤘","👊","🖖","🤙","👍","👏","✌️"],
+        1:["⚽️","🏀","🏈","⚾️","🎾","🏐","🏉","🎱"],
+        2:["🙄","😶","😂","😩","😎","😜","🤩","😍"],
+        3:["🐶","🙈","🐸","🐼","🦁","🙉","🐯","🐻"],
+        4:["🍏","🍎","🍑","🍒","🍍","🌶","🍓","🍆"],
+        5:["🚗","🚙","🏍","🚌","🏎","🚑","🚓","🚒"],
+    ]
+
+    // MARK: - Init
+
+    init(numberOfPairsOfCards: Int) {
+        for _ in 0..<numberOfPairsOfCards {
+            let card = Card()
+            cards += [card, card]
+        }
+        shuffleDeck()
+    }
+
+    // MARK: - Public
 
     func chooseCard(at index: Int) {
         if !cards[index].isMatched {
@@ -41,19 +63,6 @@ class Concentration
         }
     }
 
-    func checkScore(first: Int, second: Int) {
-        if !cards[second].isMatched && !cards[first].isMatched {
-            if cards[second].hasFlipped {
-                score -= 1
-            }
-            if cards[first].hasFlipped {
-                score -= 1
-            }
-            cards[second].hasFlipped = true
-            cards[first].hasFlipped = true
-        }
-    }
-
     func didWin() -> Bool{
         for card in cards {
             if card.isMatched == false {
@@ -68,24 +77,6 @@ class Concentration
         return themes[randomTheme]!
     }
 
-    var themes: [Int:[String]] = [
-        0:["👌","🤘","👊","🖖","🤙","👍","👏","✌️"],
-        1:["⚽️","🏀","🏈","⚾️","🎾","🏐","🏉","🎱"],
-        2:["🙄","😶","😂","😩","😎","😜","🤩","😍"],
-        3:["🐶","🙈","🐸","🐼","🦁","🙉","🐯","🐻"],
-        4:["🍏","🍎","🍑","🍒","🍍","🌶","🍓","🍆"],
-        5:["🚗","🚙","🏍","🚌","🏎","🚑","🚓","🚒"]
-    ]
-
-    func shuffleDeck() {
-        var newArray = [Card]()
-        for _ in cards.indices {
-            let randomCard = Int(arc4random_uniform(UInt32(cards.count)))
-            newArray.append(cards.remove(at: randomCard))
-        }
-        cards = newArray
-    }
-
     func resetApp(count reset: Int) {
         cards.removeAll()
         flipCount = 0
@@ -96,13 +87,32 @@ class Concentration
         }
         shuffleDeck()
     }
-    
-    init(numberOfPairsOfCards: Int) {
-        for _ in 0..<numberOfPairsOfCards {
-            let card = Card()
-            cards += [card, card]
+}
+
+
+// MARK: - Private
+
+private extension Concentration {
+
+    func shuffleDeck() {
+        var newArray = [Card]()
+        for _ in cards.indices {
+            let randomCard = Int(arc4random_uniform(UInt32(cards.count)))
+            newArray.append(cards.remove(at: randomCard))
         }
-        shuffleDeck()
+        cards = newArray
     }
 
+    func checkScore(first: Int, second: Int) {
+        if !cards[second].isMatched && !cards[first].isMatched {
+            if cards[second].hasFlipped {
+                score -= 1
+            }
+            if cards[first].hasFlipped {
+                score -= 1
+            }
+            cards[second].hasFlipped = true
+            cards[first].hasFlipped = true
+        }
+    }
 }
