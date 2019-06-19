@@ -12,6 +12,7 @@ class ViewController: UIViewController {
 
     // MARK: Outlets
 
+    @IBOutlet weak var weatherLabel: UILabel!
     @IBOutlet weak var NewGameButton: UIButton!
     @IBOutlet weak var scoreCountLabel: UILabel!
     @IBOutlet weak var flipCountLabel: UILabel!
@@ -25,8 +26,11 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Feel free to change forCity variable to other cities! (ex: "London", "Orono")
         Weather.getWeatherFromWeb(forCity: "Boston") { (result: Weather) in
-            print(result)
+            DispatchQueue.main.async {
+                self.weatherLabel.text = "City: \(result.city), Temp: \(result.temp)F, Description: \(result.desc)"
+            }
         }
     }
 }

@@ -16,6 +16,8 @@ struct Weather {
     let temp : Double
     let desc : String
     
+    // Sign up for your own key at https://www.apixu.com :). Free key gets 10,000 requests a month!
+    // This one is easy because you can just append the city name you want to the end of the requestPath!
     static let requestPath = "https://api.apixu.com/v1/current.json?key=ea645929f9cb46188e003401191906&q="
     
     // Enum to specify errors
@@ -24,7 +26,6 @@ struct Weather {
         case invalid(String)
     }
     
-    // Instantiate with a Dictionary from a JSON
     init(dictFromJSON : [String : Any], cityOfInterest : String) throws {
         guard let temp = dictFromJSON["temp_f"] as? Double else {
             throw WeatherError.invalid("Something went wrong!")
@@ -41,6 +42,7 @@ struct Weather {
         self.city = cityOfInterest
     }
     
+    // Making the request
     static func getWeatherFromWeb(forCity city: String, completion: @escaping (Weather) -> ()) {
         let link = requestPath + city
         let request = URLRequest(url: URL(string: link)!)
