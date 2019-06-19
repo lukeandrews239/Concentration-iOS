@@ -22,6 +22,13 @@ class ViewController: UIViewController {
     private lazy var game = Concentration(numberOfPairsOfCards: (cardButtons.count + 1) / 2)
     private var emojiChoices = [String]()
     private var emoji = [Int:String]()
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        Weather.getWeatherFromWeb(forCity: "Boston") { (result: Weather) in
+            print(result)
+        }
+    }
 }
 
 // MARK: - UI Actions
