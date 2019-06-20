@@ -44,7 +44,7 @@ struct Weather {
     
     // Making the request
     static func getWeatherFromWeb(forCity city: String, completion: @escaping (Weather) -> ()) {
-        let link = requestPath + city
+        let link = requestPath + city.makeURLFriendly()
         let request = URLRequest(url: URL(string: link)!)
         
         var ret : Weather? = nil
@@ -68,6 +68,12 @@ struct Weather {
             }
         }
         task.resume()
+    }
+}
+
+private extension String {
+    func makeURLFriendly() -> String {
+        return self.components(separatedBy: .whitespaces).joined(separator: "%20")
     }
 }
 
